@@ -1,0 +1,183 @@
+/* =========================================================
+   Shared page styles — applies to all entity page components
+   SRP: this file ONLY handles common page layout styling
+   ========================================================= */
+
+.page { max-width: 1100px; }
+
+/* Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #63b3ed, #9f7aea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 4px;
+}
+
+.page-sub { color: #64748b; margin: 0; font-size: 0.88rem; }
+
+/* Buttons */
+.btn-primary {
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #63b3ed, #9f7aea);
+  border: none; border-radius: 10px;
+  color: white; font-weight: 600; font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(99,179,237,0.3);
+  white-space: nowrap;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99,179,237,0.4); }
+
+.btn-secondary {
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(99,179,237,0.2);
+  border-radius: 10px; color: #94a3b8;
+  font-size: 0.9rem; cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.08); }
+
+/* Form card */
+.form-card {
+  background: rgba(30,41,59,0.8);
+  border: 1px solid rgba(99,179,237,0.15);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(12px);
+  animation: slideDown 0.25s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-title { color: #e2e8f0; font-size: 1.05rem; font-weight: 700; margin: 0 0 20px; }
+
+.entity-form { display: flex; flex-direction: column; gap: 16px; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { color: #94a3b8; font-size: 0.82rem; font-weight: 500; }
+
+.form-input {
+  padding: 10px 14px;
+  background: rgba(15,23,42,0.6);
+  border: 1px solid rgba(99,179,237,0.2);
+  border-radius: 8px; color: #e2e8f0; font-size: 0.9rem;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%; box-sizing: border-box;
+}
+.form-input:focus { border-color: #63b3ed; box-shadow: 0 0 0 3px rgba(99,179,237,0.12); }
+.form-input::placeholder { color: #475569; }
+
+.form-actions { display: flex; gap: 12px; }
+
+/* Table */
+.table-card {
+  background: rgba(30,41,59,0.7);
+  border: 1px solid rgba(99,179,237,0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.data-table {
+  width: 100%; border-collapse: collapse;
+}
+
+.data-table th {
+  padding: 14px 18px;
+  text-align: left; font-size: 0.75rem; font-weight: 600;
+  color: #64748b; text-transform: uppercase; letter-spacing: 0.8px;
+  border-bottom: 1px solid rgba(99,179,237,0.08);
+  background: rgba(15,23,42,0.3);
+}
+
+.data-table td {
+  padding: 14px 18px;
+  color: #cbd5e1; font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table tbody tr {
+  transition: background 0.15s;
+}
+.data-table tbody tr:hover { background: rgba(99,179,237,0.05); }
+
+.id-cell { color: #475569; font-size: 0.8rem; font-family: monospace; }
+
+.placa-badge {
+  background: rgba(99,179,237,0.12);
+  color: #63b3ed; border: 1px solid rgba(99,179,237,0.25);
+  padding: 3px 10px; border-radius: 6px;
+  font-size: 0.85rem; font-weight: 600; letter-spacing: 1px;
+}
+
+.type-badge {
+  background: rgba(252,129,129,0.12);
+  color: #fc8181; border: 1px solid rgba(252,129,129,0.25);
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.8rem; font-weight: 500;
+}
+.type-badge.carro {
+  background: rgba(99,179,237,0.12);
+  color: #63b3ed; border-color: rgba(99,179,237,0.25);
+}
+
+.action-cell { display: flex; gap: 8px; align-items: center; }
+
+.btn-edit, .btn-del {
+  background: none; border: none; cursor: pointer;
+  font-size: 1rem; padding: 6px 8px; border-radius: 8px;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-edit:hover { background: rgba(99,179,237,0.12); transform: scale(1.1); }
+.btn-del:hover  { background: rgba(252,129,129,0.12); transform: scale(1.1); }
+
+.empty-row { text-align: center; color: #475569; padding: 32px !important; font-style: italic; }
+
+/* State messages */
+.state-msg { color: #64748b; padding: 20px; text-align: center; }
+.error-msg {
+  color: #fc8181; padding: 14px 18px; border-radius: 10px;
+  background: rgba(252,129,129,0.08); border: 1px solid rgba(252,129,129,0.2);
+  margin-bottom: 20px;
+}
+
+/* Status badges */
+.badge-success {
+  background: rgba(104,211,145,0.12); color: #68d391;
+  border: 1px solid rgba(104,211,145,0.25);
+  padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+}
+.badge-danger {
+  background: rgba(252,129,129,0.12); color: #fc8181;
+  border: 1px solid rgba(252,129,129,0.25);
+  padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+}
+.badge-warning {
+  background: rgba(246,173,85,0.12); color: #f6ad55;
+  border: 1px solid rgba(246,173,85,0.25);
+  padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+}
