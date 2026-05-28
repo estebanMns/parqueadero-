@@ -13,6 +13,7 @@ public class Pago {
     private int id;
     private String metodoPago;
     private double total;
+    private double monto; // Sync field to satisfy PostgreSQL NOT NULL constraint on "monto"
     private String estado;
 
     public Pago() {}
@@ -21,6 +22,7 @@ public class Pago {
         this.id = id;
         this.metodoPago = metodoPago;
         this.total = total;
+        this.monto = total;
         this.estado = estado;
     }
 
@@ -46,6 +48,16 @@ public class Pago {
 
     public void setTotal(double total) {
         this.total = total;
+        this.monto = total;
+    }
+
+    public double getMonto() {
+        return monto;
+    }
+
+    public void setMonto(double monto) {
+        this.monto = monto;
+        this.total = monto;
     }
 
     public String getEstado() {

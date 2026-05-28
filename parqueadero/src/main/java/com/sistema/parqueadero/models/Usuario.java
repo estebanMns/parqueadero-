@@ -15,6 +15,7 @@ public class Usuario {
     private int id;
     private String nombre;
     private String correo;
+    private String contrasena;
 
     @Transient
     private List<Rol> roles;
@@ -50,6 +51,14 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public List<Rol> getRoles() {

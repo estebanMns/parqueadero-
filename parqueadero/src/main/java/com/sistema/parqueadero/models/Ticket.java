@@ -18,13 +18,15 @@ public class Ticket {
     private Date horaSalida;
     private String estado;
 
-    @Transient
+    @jakarta.persistence.ManyToOne(cascade = jakarta.persistence.CascadeType.ALL)
+    @jakarta.persistence.JoinColumn(name = "vehiculo_id")
     private Vehiculo vehiculo;
 
     private int espacio;
     private String nivel;
 
-    @Transient
+    @jakarta.persistence.ManyToOne(cascade = jakarta.persistence.CascadeType.ALL)
+    @jakarta.persistence.JoinColumn(name = "tarifa_id")
     private Tarifa tarifa;
 
     public Ticket() {}

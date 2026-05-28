@@ -21,6 +21,9 @@ public class UsuarioService {
     }
 
     public Usuario crearUsuario(Usuario usuario) {
+        if (usuarioRepository.findByCorreo(usuario.getCorreo()).isPresent()) {
+            throw new IllegalArgumentException("El correo electrónico ya está registrado");
+        }
         return usuarioRepository.save(usuario);
     }
 
@@ -30,5 +33,9 @@ public class UsuarioService {
 
     public void eliminarUsuario(int id) {
         usuarioRepository.deleteById(id);
+    }
+
+    public Usuario obtenerPorCorreo(String correo) {
+        return usuarioRepository.findByCorreo(correo).orElse(null);
     }
 }

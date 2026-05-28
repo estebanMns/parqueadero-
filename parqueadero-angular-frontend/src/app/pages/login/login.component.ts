@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
 import { LoginRequest } from '../../models/auth.model';
 
 /**
  * SRP: LoginComponent tiene UNA sola responsabilidad:
- * gestionar el formulario de autenticación del usuario.
+ * gestionar el formulario de autenticación y auto-registro del usuario.
  */
 @Component({
   selector: 'app-login',
@@ -29,8 +30,10 @@ import { LoginRequest } from '../../models/auth.model';
           <p class="login-subtitle">Sistema de Gestión de Parqueadero</p>
         </div>
 
-        <!-- Formulario -->
-        <form class="login-form" (ngSubmit)="onLogin()">
+        <!-- Formulario de Iniciar Sesión -->
+        <form *ngIf="!isRegisterMode" class="login-form" (ngSubmit)="onLogin()">
+          <h2 class="form-title-text">Iniciar Sesión</h2>
+
           <div class="form-group">
             <label for="correo" class="form-label">Correo electrónico</label>
             <div class="input-wrapper">
@@ -72,6 +75,80 @@ import { LoginRequest } from '../../models/auth.model';
             <span *ngIf="!loading">Ingresar al Sistema</span>
             <span *ngIf="loading" class="spinner">⟳</span>
           </button>
+
+          <p class="toggle-mode">
+            ¿No tienes cuenta? <button type="button" class="toggle-link" (click)="toggleMode(true)">Regístrate aquí</button>
+          </p>
+        </form>
+
+        <!-- Formulario de Registro -->
+        <form *ngIf="isRegisterMode" class="login-form" (ngSubmit)="onRegister()">
+          <h2 class="form-title-text">Registrarse</h2>
+
+          <div class="form-group">
+            <label for="reg-nombre" class="form-label">Nombre completo</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input
+                id="reg-nombre"
+                type="text"
+                class="form-input"
+                placeholder="Juan Pérez"
+                [(ngModel)]="registerData.nombre"
+                name="nombre"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-correo" class="form-label">Correo electrónico</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                id="reg-correo"
+                type="email"
+                class="form-input"
+                placeholder="juan@email.com"
+                [(ngModel)]="registerData.correo"
+                name="correo"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-contrasena" class="form-label">Contraseña</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input
+                id="reg-contrasena"
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-input"
+                placeholder="••••••••"
+                [(ngModel)]="registerData.contrasena"
+                name="contrasena"
+                required>
+              <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
+                {{ showPassword ? '🙈' : '👁️' }}
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="errorMsg" class="error-alert">
+            ⚠️ {{ errorMsg }}
+          </div>
+
+          <div *ngIf="successMsg" class="success-alert">
+            ✓ {{ successMsg }}
+          </div>
+
+          <button type="submit" class="btn-login" [disabled]="loading">
+            <span *ngIf="!loading">Registrar Cuenta</span>
+            <span *ngIf="loading" class="spinner">⟳</span>
+          </button>
+
+          <p class="toggle-mode">
+            ¿Ya tienes una cuenta? <button type="button" class="toggle-link" (click)="toggleMode(false)">Inicia sesión</button>
+          </p>
         </form>
       </div>
     </div>
@@ -114,7 +191,7 @@ import { LoginRequest } from '../../models/auth.model';
 
     .login-brand {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 24px;
     }
 
     .login-icon {
@@ -141,6 +218,15 @@ import { LoginRequest } from '../../models/auth.model';
     }
 
     .login-form { display: flex; flex-direction: column; gap: 20px; }
+
+    .form-title-text {
+      font-size: 1.2rem;
+      font-weight: 750;
+      color: #f1f5f9;
+      margin: 0 0 4px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
 
     .form-group { display: flex; flex-direction: column; gap: 8px; }
 
@@ -198,6 +284,15 @@ import { LoginRequest } from '../../models/auth.model';
       font-size: 0.85rem;
     }
 
+    .success-alert {
+      background: rgba(72, 187, 120, 0.1);
+      border: 1px solid rgba(72, 187, 120, 0.3);
+      color: #48bb78;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+    }
+
     .btn-login {
       padding: 14px;
       background: linear-gradient(135deg, #63b3ed, #9f7aea);
@@ -219,6 +314,29 @@ import { LoginRequest } from '../../models/auth.model';
 
     .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
 
+    .toggle-mode {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 0;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .toggle-link {
+      color: #63b3ed;
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      font-weight: 600;
+    }
+
+    .toggle-link:hover {
+      color: #9f7aea;
+    }
+
     .spinner {
       display: inline-block;
       animation: spin 0.8s linear infinite;
@@ -229,31 +347,33 @@ import { LoginRequest } from '../../models/auth.model';
 })
 export class LoginComponent {
   credentials: LoginRequest = { correo: '', contrasena: '' };
+  registerData = { nombre: '', correo: '', contrasena: '' };
+  
+  isRegisterMode = false;
   loading = false;
   errorMsg = '';
+  successMsg = '';
   showPassword = false;
 
   constructor(
     private readonly authService: AuthService,
+    private readonly usuarioService: UsuarioService,
     private readonly router: Router
   ) {}
+
+  toggleMode(register: boolean): void {
+    this.isRegisterMode = register;
+    this.errorMsg = '';
+    this.successMsg = '';
+    this.showPassword = false;
+    this.credentials = { correo: '', contrasena: '' };
+    this.registerData = { nombre: '', correo: '', contrasena: '' };
+  }
 
   onLogin(): void {
     this.loading = true;
     this.errorMsg = '';
-
-    // Mock bypass for easy testing and wowing the user immediately!
-    if (this.credentials.correo === 'admin@parqueadero.com' && this.credentials.contrasena === 'admin') {
-      setTimeout(() => {
-        this.authService.saveTokens({
-          token: 'mock-premium-jwt-token',
-          refreshToken: 'mock-premium-refresh-token'
-        });
-        this.router.navigate(['/dashboard']);
-        this.loading = false;
-      }, 600);
-      return;
-    }
+    this.successMsg = '';
 
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
@@ -263,6 +383,39 @@ export class LoginComponent {
       error: () => {
         this.errorMsg = 'Credenciales incorrectas. Intenta de nuevo.';
         this.loading = false;
+      }
+    });
+  }
+
+  onRegister(): void {
+    this.loading = true;
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    if (!this.registerData.nombre || !this.registerData.correo || !this.registerData.contrasena) {
+      this.errorMsg = 'Todos los campos son obligatorios.';
+      this.loading = false;
+      return;
+    }
+
+    this.usuarioService.crearUsuario({
+      nombre: this.registerData.nombre,
+      correo: this.registerData.correo,
+      contrasena: this.registerData.contrasena,
+      roles: []
+    }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.successMsg = '¡Registro exitoso! Redirigiendo al inicio de sesión...';
+        this.registerData = { nombre: '', correo: '', contrasena: '' };
+        setTimeout(() => {
+          this.isRegisterMode = false;
+          this.successMsg = '';
+        }, 1500);
+      },
+      error: () => {
+        this.loading = false;
+        this.errorMsg = 'Error al registrar el usuario. Inténtalo de nuevo.';
       }
     });
   }
